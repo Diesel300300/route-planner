@@ -22,8 +22,15 @@ use std::{
 };
 use quick_xml::Reader;
 use quick_xml::events::Event;
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen(start)]
+pub fn setup_panic_hook() {
+    console_error_panic_hook::set_once();
+}
 
 
+#[wasm_bindgen]
 #[derive(Debug)]
 struct Node {
     id: u64,
