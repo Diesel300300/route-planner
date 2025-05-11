@@ -1,11 +1,12 @@
 [package]
-name = "core"
+name = "route_parser"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 quick-xml = "0.25"
 wasm-bindgen = "0.2"
+anyhow = "1.0"
 console_error_panic_hook = { version = "0.1", optional = true }
 
 [lib]
