@@ -35,6 +35,7 @@ impl Node {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Way {
     pub node_refs: Vec<u64>
 }

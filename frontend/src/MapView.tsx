@@ -63,11 +63,13 @@ export function MapView({ nodes }: { nodes: Node[] }) {
     return (
         <Map
             ref={(el) => { mapRef.current = el?.getMap() ?? null; }}
+            /*
             initialViewState={{
                 longitude: nodes[0]?.lon ?? 0,
                 latitude:  nodes[0]?.lat ?? 0,
                 zoom:      12,
             }}
+            */
             style={{ width: '100%', height: '100%' }}
             mapStyle="https://api.maptiler.com/maps/basic-v2/style.json?key=4LPNKFS9ll0O8UdyvdYy"
             interactiveLayerIds={['nodes-layer']} 
