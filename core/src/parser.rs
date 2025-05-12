@@ -7,7 +7,7 @@ use std::{
 };
 use quick_xml::Reader;
 use quick_xml::events::Event;
-use crate::model::{ self, Node, Way };
+use crate::model::{ self, Node, OsmError, Way };
 
 
 
@@ -26,7 +26,7 @@ pub fn filter_nodes_on_ways(nodes: Vec<Node>, ways: &[Way]) -> Vec<Node> {
 
 
 // returns all the nodes
-pub fn parse_ways<R: BufRead>(reader: R) -> anyhow::Result<Vec<Way>> {
+pub fn parse_ways<R: BufRead>(reader: R) -> Result<Vec<Way>,OsmError> {
     let mut xml = Reader::from_reader(reader);
     xml.trim_text(true);
     let mut buf = Vec::new();
@@ -34,8 +34,16 @@ pub fn parse_ways<R: BufRead>(reader: R) -> anyhow::Result<Vec<Way>> {
     
     loop {
         match xml.read_event_into(&mut buf) {
-            Ok(Event::Start(ref e)) if e.name().0 == b"way" => {
+            Ok(Event::Start(ref way)) if way.name().0 == b"way" => {
                 let mut node_refs: Vec<u64> = Vec::new();
+                let mut way_id: u64 = 0;
+                for attr in way.attributes() {
+                    let attr = attr?;
+                    if attr.key.0 == b"id" {
+                        let val = str::from_utf8(&attr.value).expect("id is not a number");
+                        way_id = val.parse().expect("val is not a number");
+                    }
+                }
                 // parse road
                 loop {
                     match xml.read_event_into(&mut buf) {
@@ -55,7 +63,7 @@ pub fn parse_ways<R: BufRead>(reader: R) -> anyhow::Result<Vec<Way>> {
                     }
                     buf.clear();
                 }
-                ways.push(model::Way::new(node_refs));
+                ways.push(model::Way::new(way_id, node_refs));
             },
             Ok(Event::Eof) => break,
             Ok(_) => (),
@@ -67,7 +75,7 @@ pub fn parse_ways<R: BufRead>(reader: R) -> anyhow::Result<Vec<Way>> {
 }
 
 // returns all the nodes
-pub fn parse_nodes<R: BufRead>(reader: R) -> anyhow::Result<Vec<Node>> {
+pub fn parse_nodes<R: BufRead>(reader: R) -> Result<Vec<Node>, OsmError> {
     let mut xml = Reader::from_reader(reader);
     let mut buf = Vec::new();
     let mut nodes: HashMap<u64, Node> = HashMap::new();
@@ -105,9 +113,8 @@ pub fn parse_nodes<R: BufRead>(reader: R) -> anyhow::Result<Vec<Node>> {
     Ok(nodes.into_values().collect())
 }
 
-
-
-pub fn parse_ways_with_tag<R: BufRead>(tag_filter: &str, reader: R) -> anyhow::Result<Vec<Way>> {
+    
+pub fn parse_ways_with_tags(tag_filters: &[&str], reader: impl BufRead) -> Result<Vec<Way>,OsmError> {
     let mut xml = Reader::from_reader(reader);
     xml.trim_text(true);
     let mut buf = Vec::new();
@@ -115,124 +122,16 @@ pub fn parse_ways_with_tag<R: BufRead>(tag_filter: &str, reader: R) -> anyhow::R
     
     loop {
         match xml.read_event_into(&mut buf) {
-            Ok(Event::Start(ref e)) if e.name().0 == b"way" => {
+            Ok(Event::Start(ref way)) if way.name().0 == b"way" => {
                 let mut node_refs: Vec<u64> = Vec::new();
-                // parse road
-                loop {
-                    match xml.read_event_into(&mut buf) {
-                        Ok(Event::Empty(ref nd)) if nd.name().0 == b"nd" => {
-                            for attr in nd.attributes() {
-                                let attr = attr?;
-                                if attr.key.0 == b"ref" {
-                                    let val = str::from_utf8(&attr.value).expect("ref is not a number");
-                                    node_refs.push(val.parse().expect("val is not a number"));
-                                }
-                            }
-                        }
-                        Ok(Event::Empty(ref tag)) if tag.name().0 == b"tag" => {
-                            let mut key: Option<String> = None;
-                            for attr in tag.attributes() {
-                                let attr = attr?;
-                                if attr.key.0 == b"k" {
-                                    key = Some(str::from_utf8(&attr.value).expect("key is not a string").to_string());
-                                }
-                            }
-                            if let Some(k) = key {
-                                if k == tag_filter {
-                                    ways.push(model::Way::new(node_refs));
-                                    break;
-                                }
-                            }
-                        }
-                        Ok(Event::End(ref e2)) if e2.name().0 == b"way" => break, // end of this <way>
-                        Ok(Event::Eof) => break,
-                        Ok(_) => (),
-                        Err(e) => panic!("XML parsing wen't wrong {}", e)
+                let mut way_id: u64 = 0;
+                for attr in way.attributes() {
+                    let attr = attr?;
+                    if attr.key.0 == b"id" {
+                        let val = str::from_utf8(&attr.value).expect("id is not a number");
+                        way_id = val.parse().expect("val is not a number");
                     }
-                    buf.clear();
                 }
-            },
-            Ok(Event::Eof) => break,
-            Ok(_) => (),
-            Err(e) => panic!("XML parsing wen't wrong {}", e)
-        }
-        buf.clear();
-    }
-    Ok(ways)
-}
-
-// TODO: parse osm with tag filter and not a certain tag
-pub fn parse_ways_with_tag_and_exclude_tag<R: BufRead>(tag_filter: &str, exclude_tag: &str, reader: R) -> anyhow::Result<Vec<Way>> {
-    let mut xml = Reader::from_reader(reader);
-    xml.trim_text(true);
-    let mut buf = Vec::new();
-    let mut ways = Vec::new();
-    
-    loop {
-        match xml.read_event_into(&mut buf) {
-            Ok(Event::Start(ref e)) if e.name().0 == b"way" => {
-                let mut node_refs: Vec<u64> = Vec::new();
-                let mut bool_tag = false;
-                // parse road
-                loop {
-                    match xml.read_event_into(&mut buf) {
-                        Ok(Event::Empty(ref nd)) if nd.name().0 == b"nd" => {
-                            for attr in nd.attributes() {
-                                let attr = attr?;
-                                if attr.key.0 == b"ref" {
-                                    let val = str::from_utf8(&attr.value).expect("ref is not a number");
-                                    node_refs.push(val.parse().expect("val is not a number"));
-                                }
-                            }
-                        }
-                        Ok(Event::Empty(ref tag)) if tag.name().0 == b"tag" => {
-                            let mut key: Option<String> = None;
-                            for attr in tag.attributes() {
-                                let attr = attr?;
-                                if attr.key.0 == b"k" {
-                                    key = Some(str::from_utf8(&attr.value).expect("key is not a string").to_string());
-                                }
-                            }
-                            if let Some(k) = key {
-                                if k == tag_filter {
-                                    bool_tag = true;
-                                }
-                                if k == exclude_tag {
-                                    bool_tag = false;
-                                    break;
-                                }
-                            }
-                        }
-                        Ok(Event::End(ref e2)) if e2.name().0 == b"way" => break, // end of this <way>
-                        Ok(Event::Eof) => break,
-                        Ok(_) => (),
-                        Err(e) => panic!("XML parsing wen't wrong {}", e)
-                    }
-                    buf.clear();
-                }
-                if bool_tag {
-                    ways.push(model::Way::new(node_refs));
-                }
-            },
-            Ok(Event::Eof) => break,
-            Ok(_) => (),
-            Err(e) => panic!("XML parsing wen't wrong {}", e)
-        }
-        buf.clear();
-    }
-    Ok(ways)
-}
-    
-pub fn parse_ways_with_tags(tag_filters: &[&str], reader: impl BufRead) -> anyhow::Result<Vec<Way>> {
-    let mut xml = Reader::from_reader(reader);
-    xml.trim_text(true);
-    let mut buf = Vec::new();
-    let mut ways = Vec::new();
-    
-    loop {
-        match xml.read_event_into(&mut buf) {
-            Ok(Event::Start(ref e)) if e.name().0 == b"way" => {
-                let mut node_refs: Vec<u64> = Vec::new();
                 // parse road
                 loop {
                     match xml.read_event_into(&mut buf) {
@@ -255,7 +154,7 @@ pub fn parse_ways_with_tags(tag_filters: &[&str], reader: impl BufRead) -> anyho
                             }
                             if let Some(k) = key {
                                 if tag_filters.contains(&k.as_str()) {
-                                    ways.push(model::Way::new(node_refs.clone()));
+                                    ways.push(model::Way::new(way_id, node_refs.clone()));
                                     break;
                                 }
                             }
@@ -332,8 +231,8 @@ mod tests {
             Node::new(4, 52.8, 13.1),
         ];
         let ways = vec![
-            Way::new(vec![1, 2]),
-            Way::new(vec![3]),
+            Way::new(1,vec![1, 2]),
+            Way::new(2,vec![3]),
         ];
         let filtered_nodes = filter_nodes_on_ways(nodes.clone(), &ways);
         assert_eq!(filtered_nodes.len(), 3);
@@ -355,38 +254,10 @@ mod tests {
             </osm>
         "#;
         let reader = BufReader::new(xml.as_bytes());
-        let ways = parse_ways_with_tag("highway", reader).unwrap();
+        let ways = parse_ways_with_tags(&["highway"], reader).unwrap();
         assert_eq!(ways.len(), 2);
         assert_eq!(ways[0].node_refs, vec![1, 2]);
         assert_eq!(ways[1].node_refs, vec![3]);
-    }
-
-    #[test]
-    fn test_parse_ways_with_tag_and_exclude_tag() {
-        let xml = r#"
-            <osm>
-                <way>
-                    <nd ref="1"/>
-                    <nd ref="2"/>
-                    <tag k="highway" v="residential"/>
-                </way>
-                <way>
-                    <nd ref="3"/>
-                    <tag k="highway" v="motorway"/>
-                    <tag k="name" v="Main St"/>
-                </way>
-                <way>
-                    <nd ref="4"/>
-                    <tag k="highway" v="motorway"/>
-                </way>
-            </osm>
-        "#;
-        let reader = BufReader::new(xml.as_bytes());
-        let ways = parse_ways_with_tag_and_exclude_tag("highway", "name", reader).unwrap();
-        println!("ways: {:?}", ways);
-        assert_eq!(ways.len(), 2);
-        assert_eq!(ways[0].node_refs, vec![1, 2]);
-        assert_eq!(ways[1].node_refs, vec![4]);
     }
 
     #[test]

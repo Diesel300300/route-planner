@@ -1,6 +1,18 @@
-use wasm_bindgen::prelude::*;
+use quick_xml::Error as xmlError;
+use quick_xml::events::attributes::AttrError;
+use serde::Serialize;
+use thiserror::Error;
 
-#[wasm_bindgen]
+
+#[derive(Error, Debug)]
+pub enum OsmError {
+    #[error("XML parsing error: {0}")]
+    XmlParseError(#[from] xmlError),
+    #[error("Attribute unwrap error: {0}")]
+    AttributeParseError(#[from] AttrError),
+}
+
+
 #[derive(Debug, Clone)]
 pub struct Node {
     id: u64,
@@ -8,46 +20,44 @@ pub struct Node {
     lon: f64
 }
 
-// getters for wasm package
-// so this is external
-#[wasm_bindgen]
 impl Node {
-    #[wasm_bindgen(getter)]
     pub fn id(&self) -> u64 {
         self.id
     }
 
-    #[wasm_bindgen(getter)]
     pub fn lat(&self) -> f64 {
         self.lat
     }
 
-    #[wasm_bindgen(getter)]
     pub fn lon(&self) -> f64 {
         self.lon
     }
 }
 
-// no wasm here so this is internal for me to use
 impl Node {
     pub fn new(id: u64, lat: f64, lon: f64) -> Self {
         Node { id, lat, lon }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Way {
+    pub id: u64,
     pub node_refs: Vec<u64>
 }
 
 impl Way {
-    pub fn new(node_refs: Vec<u64>) -> Self {
-        Way { node_refs }
+    pub fn new(id: u64, node_refs: Vec<u64>) -> Self {
+        Way { id, node_refs }
     }
 
-    pub fn way(&self) -> Vec<u64> {
+    pub fn node_refs(&self) -> Vec<u64> {
         // check if this is worth or i need to find something else
         self.node_refs.clone()
+    }
+
+    pub fn id(&self) -> u64 {
+        self.id
     }
 }
 
