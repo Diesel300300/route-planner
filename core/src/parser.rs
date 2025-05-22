@@ -1,5 +1,4 @@
 use core::str;
-use std::collections::HashSet;
 use std::panic;
 use std::{
     collections::HashMap, 
@@ -11,17 +10,18 @@ use crate::model::{ self, Node, OsmError, Way };
 
 
 
-pub fn filter_nodes_on_ways(nodes: Vec<Node>, ways: &[Way]) -> Vec<Node> {
-    let mut road_ids = HashSet::new();
+pub fn get_nodes_on_ways(nodes: HashMap<u64,Node>, ways: &[Way]) -> Vec<Way> {
+    let mut way_return: Vec<Way> = Vec::new();
     for way in ways {
-        for &nid in &way.node_refs {
-            road_ids.insert(nid);
+        let mut way_clone = way.clone();
+        for node_ref in &way.node_refs() {
+            if let Some(node) = nodes.get(node_ref) {
+                way_clone.nodes.push(node.clone());
+            }
         }
+        way_return.push(way_clone);
     }
-
-    nodes.into_iter()
-        .filter(|node| road_ids.contains(&node.id()))
-        .collect()
+    return way_return
 }
 
 
@@ -63,7 +63,7 @@ pub fn parse_ways<R: BufRead>(reader: R) -> Result<Vec<Way>,OsmError> {
                     }
                     buf.clear();
                 }
-                ways.push(model::Way::new(way_id, node_refs));
+                ways.push(model::Way::new(way_id, node_refs, Vec::new()));
             },
             Ok(Event::Eof) => break,
             Ok(_) => (),
@@ -75,7 +75,7 @@ pub fn parse_ways<R: BufRead>(reader: R) -> Result<Vec<Way>,OsmError> {
 }
 
 // returns all the nodes
-pub fn parse_nodes<R: BufRead>(reader: R) -> Result<Vec<Node>, OsmError> {
+pub fn parse_nodes<R: BufRead>(reader: R) -> Result<HashMap<u64,Node>, OsmError> {
     let mut xml = Reader::from_reader(reader);
     let mut buf = Vec::new();
     let mut nodes: HashMap<u64, Node> = HashMap::new();
@@ -110,11 +110,11 @@ pub fn parse_nodes<R: BufRead>(reader: R) -> Result<Vec<Node>, OsmError> {
         buf.clear();
     }
 
-    Ok(nodes.into_values().collect())
+    Ok(nodes)
 }
 
     
-pub fn parse_ways_with_tags(tag_filters: &[&str], reader: impl BufRead) -> Result<Vec<Way>,OsmError> {
+pub fn parse_ways_with_tags<R: BufRead>(tag_filters: &[&str], reader: R) -> Result<Vec<Way>,OsmError> {
     let mut xml = Reader::from_reader(reader);
     xml.trim_text(true);
     let mut buf = Vec::new();
@@ -154,7 +154,7 @@ pub fn parse_ways_with_tags(tag_filters: &[&str], reader: impl BufRead) -> Resul
                             }
                             if let Some(k) = key {
                                 if tag_filters.contains(&k.as_str()) {
-                                    ways.push(model::Way::new(way_id, node_refs.clone()));
+                                    ways.push(model::Way::new(way_id, node_refs.clone(), Vec::new()));
                                     break;
                                 }
                             }
@@ -221,21 +221,6 @@ mod tests {
         assert_eq!(ways.len(), 2);
         assert_eq!(ways[0].node_refs, vec![1, 2]);
         assert_eq!(ways[1].node_refs, vec![3]);
-    }
-    #[test]
-    fn test_filter_nodes_on_ways() {
-        let nodes = vec![
-            Node::new(1, 52.5, 13.4),
-            Node::new(2, 52.6, 13.5),
-            Node::new(3, 52.7, 13.6),
-            Node::new(4, 52.8, 13.1),
-        ];
-        let ways = vec![
-            Way::new(1,vec![1, 2]),
-            Way::new(2,vec![3]),
-        ];
-        let filtered_nodes = filter_nodes_on_ways(nodes.clone(), &ways);
-        assert_eq!(filtered_nodes.len(), 3);
     }
 
     #[test]

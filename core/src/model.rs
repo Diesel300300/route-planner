@@ -13,11 +13,25 @@ pub enum OsmError {
 }
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
+pub struct EdgeData {
+    pub way_id: u64,
+    pub length_m: f64,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Neighbor {
+    pub osm_id: u64,
+    pub node_index: usize,
+    pub edge_data: EdgeData,
+}
+
+
+#[derive(Debug, Clone,Copy, Serialize)]
 pub struct Node {
     id: u64,
     lat: f64, 
-    lon: f64
+    lon: f64,
 }
 
 impl Node {
@@ -43,21 +57,26 @@ impl Node {
 #[derive(Debug, Clone, Serialize)]
 pub struct Way {
     pub id: u64,
-    pub node_refs: Vec<u64>
+    pub nodes: Vec<Node>,
+    
+    #[serde(skip_serializing)]
+    pub node_refs: Vec<u64> // vec containing the OSM node ids
 }
 
 impl Way {
-    pub fn new(id: u64, node_refs: Vec<u64>) -> Self {
-        Way { id, node_refs }
-    }
-
-    pub fn node_refs(&self) -> Vec<u64> {
-        // check if this is worth or i need to find something else
-        self.node_refs.clone()
+    pub fn new(id: u64, node_refs: Vec<u64>, nodes: Vec<Node>) -> Self {
+        Way { id, node_refs, nodes }
     }
 
     pub fn id(&self) -> u64 {
         self.id
     }
+    pub fn node_refs(&self) -> Vec<u64> {
+        self.node_refs.clone()
+    }
+    pub fn nodes(&self) -> Vec<Node> {
+        self.nodes.clone()
+    }
+
 }
 
