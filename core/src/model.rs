@@ -2,6 +2,7 @@ use quick_xml::Error as xmlError;
 use quick_xml::events::attributes::AttrError;
 use serde::Serialize;
 use thiserror::Error;
+use uuid::Uuid;
 
 
 #[derive(Error, Debug)]
@@ -11,6 +12,21 @@ pub enum OsmError {
     #[error("Attribute unwrap error: {0}")]
     AttributeParseError(#[from] AttrError),
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct Path {
+    pub id: Uuid, // add id to have difference between paths in frontend
+    pub distance: f64,
+    pub nodes: Vec<Node>
+}
+
+impl Path {
+
+    pub fn new(nodes: Vec<Node>, distance: f64) -> Path {
+        Path { id: Uuid::new_v4(), distance, nodes }
+    }
+}
+
 
 
 #[derive(Debug, Clone, Copy)]

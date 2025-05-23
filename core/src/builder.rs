@@ -5,12 +5,12 @@ use crate::graph::Graph;
 
 const EARTH_RADIUS_M: f64 = 6_371_000.0;
 
-fn haversine_distance(node1: &Node,node2: &Node) -> f64 {
+pub fn haversine_distance(lat1: f64, lon1: f64,lat2: f64, lon2: f64,) -> f64 {
     let (φ1, λ1, φ2, λ2) = (
-        node1.lat().to_radians(),
-        node1.lon().to_radians(),
-        node2.lat().to_radians(),
-        node2.lon().to_radians(),
+        lat1.to_radians(),
+        lon1.to_radians(),
+        lat2.to_radians(),
+        lon2.to_radians(),
     );
     let dφ = φ2 - φ1;
     let dλ = λ2 - λ1;
@@ -67,7 +67,7 @@ impl GraphBuilder {
             self.add_node(to);
             let edge_data = EdgeData {
                 way_id: way.id(),
-                length_m: haversine_distance(&from, &to),
+                length_m: haversine_distance(from.lat(), from.lon(), to.lat(),to.lon()),
             };
             self.add_edge_bidirectional(from.id(), to.id(), edge_data);
         }

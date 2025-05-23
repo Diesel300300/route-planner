@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 
-use crate::model::{Node, Neighbor};
+use crate::model::{Node, Neighbor, Path};
+use crate::builder::haversine_distance;
 
 pub struct Graph {
     nodes: Vec<Node>,
@@ -23,7 +24,7 @@ impl Graph {
         &self.adj
     }
     
-    pub fn bfs(&self, start: usize, goal: usize, k: usize, target_distance: f64, tol: f64) -> Vec<(Vec<usize>,f64)> {
+    fn bfs(&self, start: usize, goal: usize, k: usize, target_distance: f64, tol: f64) -> Vec<(Vec<usize>,f64)> {
         let mut results = Vec::new();
         let mut queue : VecDeque<(Vec<usize>,f64)> = VecDeque::new();
         
@@ -60,7 +61,63 @@ impl Graph {
         }
         results
     }
+
+    // maps a lat and lon to a node in the graph
+    // retursn the index of the node in the nodes array
+    fn map_lat_lon_to_node(&self, lat: f64, lon: f64) -> usize {
+        let mut idx: usize = 0;
+        let mut shortest_dist = haversine_distance(lat, lon, self.nodes[0].lat(), self.nodes[0].lon());
+        
+        for (i, node) in self.nodes.iter().enumerate().skip(1) {
+            let d = haversine_distance(lat, lon, node.lat(), node.lon());
+            if d < shortest_dist {
+                shortest_dist = d;
+                idx = i;
+            }
+        }
+        idx
+    }
+    
+
+    fn convert_to_path(&self, indicies: &Vec<usize>, distance: f64) -> Path {
+        let mut nodes: Vec<Node> = Vec::new();
+        for idx in indicies.iter() {
+            nodes.push(self.nodes[*idx]);
+        }
+        Path::new(nodes, distance)
+    }
+
+    pub fn get_paths(&self, start_lat: f64,start_lon:f64,   goal_lat: f64, goal_lon:f64, k: usize, target_distance: f64, tol: f64) -> Vec<Path> {
+        let mut paths = Vec::new();
+        let start_idx = self.map_lat_lon_to_node(start_lat, start_lon);
+        let goal_idx = self.map_lat_lon_to_node(goal_lat, goal_lon);
+    
+        let solutions = self.bfs(start_idx, goal_idx, k,target_distance, tol);
+        for (solution,dist) in solutions.iter() {
+            paths.push(self.convert_to_path(solution, *dist));
+        }
+
+        paths
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #[cfg(test)]
@@ -235,6 +292,62 @@ mod constrained_bfs_tests {
             (vec![0, 2, 3, 5], 6.0),
         ];
         assert_eq!(paths, expected);
+    }
+}
+
+
+
+
+
+
+
+#[cfg(test)]
+mod nearest_node_tests {
+    use super::*;
+    use crate::model::Node;
+
+    /// Build a tiny graph with three nodes at distinct coordinates.
+    ///
+    /// Nodes:
+    ///   0: (0.0, 0.0)
+    ///   1: (0.0, 1.0)
+    ///   2: (1.0, 0.0)
+    fn build_three_node_graph() -> Graph {
+        let nodes = vec![
+            Node::new(0, 0.0, 0.0),
+            Node::new(1, 0.0, 1.0),
+            Node::new(2, 1.0, 0.0),
+        ];
+        // adjacency doesn't matter for nearest‐node tests
+        let adj = vec![Vec::new(), Vec::new(), Vec::new()];
+        Graph::new(nodes, adj)
+    }
+
+    #[test]
+    fn nearest_to_origin() {
+        let graph = build_three_node_graph();
+        // Exactly at node 0
+        assert_eq!(graph.map_lat_lon_to_node(0.0, 0.0), 0);
+        // Slightly off toward node 0
+        assert_eq!(graph.map_lat_lon_to_node(0.1, -0.1), 0);
+    }
+
+    #[test]
+    fn nearest_to_north() {
+        let graph = build_three_node_graph();
+        // Point near (0,1) should pick node 1
+        assert_eq!(graph.map_lat_lon_to_node(0.0, 0.9), 1);
+        // Slight latitude shift but still closer to node 1
+        assert_eq!(graph.map_lat_lon_to_node(0.1, 0.9), 1);
+    }
+
+    #[test]
+    fn nearest_to_east() {
+        let graph = build_three_node_graph();
+        // Point near (1,0) should pick node 2
+        assert_eq!(graph.map_lat_lon_to_node(0.9, 0.1), 2);
+        // Slight longitude shift but still closer to node 2
+        assert_eq!(graph.map_lat_lon_to_node(0.9, -0.1), 2);
     }
 }
 

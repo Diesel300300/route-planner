@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+uuid = { version = "1.17.0", features = ["v4", "serde"] }
 log = "0.4"
 rocket = { version = "0.5.0-rc.3", features = ["json"] }
 rocket_cors = "0.6.0"
@@ -16,3 +17,4 @@ thiserror = "2.0.12"
 [[bin]]
 name = "server"
 path = "src/main.rs"
+
