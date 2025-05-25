@@ -1,42 +1,81 @@
-import { useEffect, useState } from 'react';
-import { MapView } from './MapView'
+import { useState, useEffect, useMemo } from 'react';
+import { MapView } from './components/MapView';
+import { PathInput } from './components/PathInput';
+import { MapControl } from './components/MapControl';
+import { fetchWays, fetchPaths, assignColorsPaths, assignColorsWays } from './util/map';
+import type { Path, Way } from './models/map';
 
-import {setup, parse_osm_ways_with_tags, Node } from '../pkg/route_parser.js';
-
-const accepted_road_types = [
-    "residential",
-    "unclassified",
-    "track",
-    "service",
-    "tertiary",
-    "road",
-    "secondary",
-    "primary",
-    "trunk",
-    "primary_link",
-    "trunk_link",
-    "tertiary_link",
-    "secondary_link",
-    "highway",
-]
 
 function App() {
-    const [nodes, setNodes] = useState<Node[]>([]);
+    const [markers, setMarkers] = useState<{ lat: number, lon: number}[]>([]);
+    const [distance, setDistance] = useState<number>(500);
+    const [amountPaths, setAmountPaths] = useState<number>(5);
+    const [ways, setWays] = useState<Way[]>([]);
+    const [paths, setPaths] = useState<Path[]>([]);
+    const [nodesOn, setNodesOn] = useState<boolean>(false);
+    const [waysOn, setWaysOn] = useState<boolean>(false);
+    
     useEffect(() => {
-        (async () => {
-            setup();
-            const osmXml = await fetch('/data/map').then(r => r.text());
-            const wasmRoads: Node[] = Array.from(parse_osm_ways_with_tags(osmXml, accepted_road_types));
-            console.log("Parsed nodes:", nodes.length, nodes.slice(0,5));
-            setNodes(wasmRoads);
-        })();
-    });
+        fetchWays()
+            .then(setWays)
+            .catch(console.error);
+    }, []);
+
+  const colorMapWays = useMemo(
+    () => assignColorsWays(ways),
+    [ways]
+  );
+
+  const colorMapPaths = useMemo(
+    () => assignColorsPaths(paths),
+    [paths]
+  );
 
     return (
-        <div className='h-screen p-4 space-y-4 bg-gray-200'>
-            <h1 className="text-2xl font-semibold">My Map Application</h1>
+        <div className="p-4">
+            <div className="grid grid-rows-10 items-center">
+                <h1 className="row-span-1 h-10 text-center text-2xl font-semibold">My Map Application</h1>
+                <div className="row-span-9 grid grid-cols-6 gap-4 bg-gray-400">
 
-            <MapView nodes={nodes}/>
+                    <div className="col-span-1 p-4 ">
+                        <div className='grid grid-rows-2'>
+                            <div className='row-span-1'>
+                                <PathInput
+                                    markers={markers}
+                                    distance={distance}
+                                    setDistance={setDistance}
+                                    amountPaths={amountPaths}
+                                    setAmountPaths={setAmountPaths}
+                                    fetchPaths={fetchPaths}
+                                    setPaths={setPaths}
+                                />
+                            </div>
+                            <div className='row-span-1 mt-4'>
+                                Map Controls
+                                <MapControl 
+                                    nodesOn={nodesOn} 
+                                    setNodesOn={setNodesOn}
+                                    waysOn={waysOn}
+                                    setWaysOn={setWaysOn}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='col-span-5 h-screen p-1 space-y-4 bg-gray-200'>
+                        <MapView 
+                            ways={ways}
+                            markers={markers} 
+                            onMarkersChange={setMarkers} 
+                            paths={paths} 
+                            colorMapPaths={colorMapPaths}
+                            colorMapWays={colorMapWays}
+                            nodesOn={nodesOn}
+                            waysOn={waysOn}
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
