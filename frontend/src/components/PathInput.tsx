@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import {fetchPathsDfs, fetchPathsSpecialDijkstra, fetchPathsBfs} from '../util/map.ts';
+
+
 
 interface PathInputProps {
     markers: { lat: number; lon: number }[];
@@ -5,12 +9,36 @@ interface PathInputProps {
     setDistance: (distance: number) => void;
     amountPaths: number;
     setAmountPaths: (amount: number) => void;
-    fetchPaths: (start: { lat: number; lon: number }, end: { lat: number; lon: number }, distance: number, amountPaths: number) => Promise<any[]>;
     setPaths: (paths: any[]) => void;
 }
 
 
-export function PathInput({ markers, distance, setDistance, amountPaths, setAmountPaths, fetchPaths, setPaths }: PathInputProps) {
+
+export function PathInput({ markers, distance, setDistance, amountPaths, setAmountPaths, setPaths }: PathInputProps) {
+    const [pathAlgorithm, setPathAlgorithm] = useState<string>('dfs');
+    function handleCalculatePath() {
+        if (markers.length < 2) {
+            // TODO: nice error handling
+            alert('Please select two markers on the map.');
+            return;
+        }
+        if (pathAlgorithm === 'special_dijkstra') { 
+            fetchPathsSpecialDijkstra(markers[0], markers[1], distance, amountPaths)
+                .then(setPaths)
+                .then(console.log)
+                .catch(console.error);
+        } else if (pathAlgorithm === 'dfs') {
+            fetchPathsDfs(markers[0], markers[1], distance, amountPaths)
+                .then(setPaths)
+                .then(console.log)
+                .catch(console.error);
+        } else if (pathAlgorithm === 'bfs') {
+            fetchPathsBfs(markers[0], markers[1], distance, amountPaths)
+                .then(setPaths)
+                .then(console.log)
+                .catch(console.error)
+        }
+    }
 
     return (
         <div>
@@ -35,20 +63,22 @@ export function PathInput({ markers, distance, setDistance, amountPaths, setAmou
                     onChange={(e) => setAmountPaths(Number(e.target.value))}
                 />
             </label>
+            <label className='block mt-2'>
+                Path Algorithm:
+                <select 
+                    className='w-full p-1 border border-black rounded-lg'
+                    value={pathAlgorithm}
+                    onChange={(e) => setPathAlgorithm(e.target.value)}
+                >
+                    <option value="dfs">DFS</option>
+                    <option value="bfs">BFS</option>
+                    <option value="special_dijkstra">Special Dijkstra</option>
+                </select>
+            </label>
+
             <button
                 className='mt-2 w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600'
-                onClick={() => 
-                    {
-                        if (markers.length < 2) {
-                            // TODO: nice error handling
-                            alert('Please select two markers on the map.');
-                            return;
-                        }
-                        fetchPaths(markers[0], markers[1], distance, amountPaths)
-                        .then(setPaths)
-                        .catch(console.error)
-                    }
-                }
+                onClick={handleCalculatePath}
             > Calculate Route
             </button>
         </div>

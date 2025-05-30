@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { MapView } from './components/MapView';
 import { PathInput } from './components/PathInput';
 import { MapControl } from './components/MapControl';
-import { fetchWays, fetchPaths, assignColorsPaths, assignColorsWays } from './util/map';
+import { fetchWays, assignColorsPaths, assignColorsWays } from './util/map';
 import type { Path, Way } from './models/map';
 
 
@@ -14,6 +14,7 @@ function App() {
     const [paths, setPaths] = useState<Path[]>([]);
     const [nodesOn, setNodesOn] = useState<boolean>(false);
     const [waysOn, setWaysOn] = useState<boolean>(false);
+    const [visiblePaths, setVisiblePaths] = useState<string[]>([]);
     
     useEffect(() => {
         fetchWays()
@@ -46,7 +47,6 @@ function App() {
                                     setDistance={setDistance}
                                     amountPaths={amountPaths}
                                     setAmountPaths={setAmountPaths}
-                                    fetchPaths={fetchPaths}
                                     setPaths={setPaths}
                                 />
                             </div>
@@ -57,6 +57,9 @@ function App() {
                                     setNodesOn={setNodesOn}
                                     waysOn={waysOn}
                                     setWaysOn={setWaysOn}
+                                    paths={paths}
+                                    visiblePaths={visiblePaths}
+                                    setVisiblePaths={setVisiblePaths}
                                 />
                             </div>
                         </div>
@@ -72,6 +75,7 @@ function App() {
                             colorMapWays={colorMapWays}
                             nodesOn={nodesOn}
                             waysOn={waysOn}
+                            visiblePaths={visiblePaths}
                         />
                     </div>
                 </div>

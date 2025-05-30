@@ -15,25 +15,30 @@ interface MapViewProps {
     colorMapWays: Map<string, string>;
     nodesOn: boolean;
     waysOn: boolean;
+    visiblePaths: string[];
 }
 
-export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,colorMapWays, nodesOn, waysOn }: MapViewProps ) {
+export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,colorMapWays, nodesOn, waysOn, visiblePaths }: MapViewProps ) {
+    if (!ways?.length) {
+        return <div className="flex items-center justify-center h-full">Loading...</div>;
+    }
 
     const linesGeo = useMemo<GeoJSON.FeatureCollection>(() => ({
         type: 'FeatureCollection',
-        features: paths.map((path): GeoJSON.Feature => ({
+        features: paths?.map((path) => ({
             type: 'Feature',
             geometry: {
                 type: 'LineString',
-                coordinates: path.nodes.map(n => [n.lon, n.lat]),
+                coordinates: path.nodes.map((n) => [n.lon, n.lat]),
             },
             properties: {
-                id:    path.id,
-                color: colorMapPaths.get(path.id) || '#000000',
+                id:       path.id,
+                color:    colorMapPaths.get(path.id) ?? '#000',
                 distance: path.distance,
             },
         })),
     }), [paths, colorMapPaths]);
+    
 
 
     const wayLinesGeo = useMemo<GeoJSON.FeatureCollection>(() => ({
@@ -86,6 +91,10 @@ export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,c
         onMarkersChange(markers.slice(0, -1));
     };
 
+    const pathFilter = useMemo<any>(() => {
+        return ["in", "id", ...visiblePaths];
+    }, [visiblePaths]);
+
     return (
         <Map
             ref={(el) => { mapRef.current = el?.getMap() ?? null; }}
@@ -115,6 +124,32 @@ export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,c
             onClick={handleMapLeftClick}
             onContextMenu={handleMapRightClick}
         >
+
+            <Source id="paths" type="geojson" data={linesGeo}>
+                {/* only these two filtered layers, drop the old ones */}
+                <Layer
+                    id="paths-layer"
+                    type="line"
+                    filter={pathFilter}
+                    paint={{
+                        "line-color": ["get", "color"],
+                        "line-width": 2,
+                    }}
+                />
+                <Layer
+                    id="paths-hit"
+                    type="line"
+                    filter={pathFilter}
+                    paint={{
+                        "line-color": "#000",
+                        "line-width": 12,
+                        "line-opacity": 0,
+                    }}
+                />
+            </Source>
+
+            { /*paths && paths.length > 0 && visiblePaths.length > 0 &&  
+
              <Source id="paths" type="geojson" data={linesGeo}>
                 <Layer id="paths-layer" type="line" paint={{
                     'line-color': ['get','color'],
@@ -126,6 +161,8 @@ export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,c
                     'line-opacity': 0
                 }} />
             </Source>
+            */}
+            
             {nodesOn && (
             <Source id="nodes" type="geojson" data={nodesGeo}>
                 <Layer id="nodes-layer" type="circle" paint={{
@@ -134,6 +171,7 @@ export function MapView({ ways, markers, onMarkersChange, paths, colorMapPaths,c
                 }} />
             </Source>
             )}
+
             {waysOn && (
             <Source id="way-lines" type="geojson" data={wayLinesGeo}>
                 <Layer id="way-lines-layer" type="line" paint={{
