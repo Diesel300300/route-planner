@@ -2,6 +2,7 @@ pub mod model;
 pub mod parser;
 pub mod graph;
 pub mod builder;
+pub mod benchmarking;
 
 use std::{fs::File, io::BufReader};
 use crate::model::{OsmError, Way};

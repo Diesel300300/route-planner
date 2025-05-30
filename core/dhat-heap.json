@@ -1,0 +1,749 @@
+{
+"dhatFileVersion": 2,
+"mode": "rust-heap",
+"verb": "Allocated",
+"bklt": true,
+"bkacc": false,
+"tu": "µs",
+"Mtu": "s",
+"tuth": 10,
+"cmd": "/home/diesel/personal/route-planner/core/target/release/deps/route_parser-71b2b3b424c42d6f --nocapture profile_real_osm",
+"pid": 497938,
+"tg": 7186919,
+"te": 7188730,
+"pps": [
+{
+"tb": 2216224,
+"tbk": 30359,
+"tl": 245633,
+"mb": 8192,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+3,
+4,
+5
+]
+},
+{
+"tb": 1562544,
+"tbk": 4689,
+"tl": 314,
+"mb": 1656,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+6,
+7
+]
+},
+{
+"tb": 44920,
+"tbk": 926,
+"tl": 2415,
+"mb": 552,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+8,
+9
+]
+},
+{
+"tb": 24,
+"tbk": 2,
+"tl": 353,
+"mb": 16,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+11,
+12,
+13,
+14,
+15,
+5
+]
+},
+{
+"tb": 134760,
+"tbk": 926,
+"tl": 23563,
+"mb": 1656,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+16,
+7
+]
+},
+{
+"tb": 8650876,
+"tbk": 16,
+"tl": 863301,
+"mb": 6488096,
+"mbk": 2,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+17,
+18,
+19,
+20
+]
+},
+{
+"tb": 8192,
+"tbk": 1,
+"tl": 566490,
+"mb": 8192,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+21
+]
+},
+{
+"tb": 513792,
+"tbk": 4012,
+"tl": 25331830760,
+"mb": 513536,
+"mbk": 4010,
+"gb": 513536,
+"gbk": 4010,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+22,
+23,
+24,
+7
+]
+},
+{
+"tb": 8160,
+"tbk": 8,
+"tl": 1317,
+"mb": 4096,
+"mbk": 1,
+"gb": 4096,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+25,
+26,
+27,
+28
+]
+},
+{
+"tb": 630647,
+"tbk": 44011,
+"tl": 8555,
+"mb": 35,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+29,
+5
+]
+},
+{
+"tb": 114464,
+"tbk": 9,
+"tl": 501860,
+"mb": 57344,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+30,
+31,
+32,
+5
+]
+},
+{
+"tb": 24,
+"tbk": 2,
+"tl": 370,
+"mb": 16,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+11,
+12,
+13,
+33,
+20
+]
+},
+{
+"tb": 46464,
+"tbk": 362,
+"tl": 2280089470,
+"mb": 46336,
+"mbk": 361,
+"gb": 46336,
+"gbk": 361,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+22,
+34,
+24,
+7
+]
+},
+{
+"tb": 293184,
+"tbk": 1568,
+"tl": 25469074,
+"mb": 191040,
+"mbk": 926,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+35,
+36,
+9
+]
+},
+{
+"tb": 275272,
+"tbk": 9,
+"tl": 24484,
+"mb": 208928,
+"mbk": 2,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+37,
+38,
+39,
+40,
+7
+]
+},
+{
+"tb": 3380,
+"tbk": 3,
+"tl": 456,
+"mb": 3296,
+"mbk": 2,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+37,
+38,
+39,
+41,
+7
+]
+},
+{
+"tb": 14813952,
+"tbk": 154312,
+"tl": 22806,
+"mb": 128,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+42,
+43,
+44,
+45,
+46,
+20
+]
+},
+{
+"tb": 540,
+"tbk": 4,
+"tl": 287728,
+"mb": 288,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+47,
+48,
+49,
+50,
+33,
+20
+]
+},
+{
+"tb": 30,
+"tbk": 1,
+"tl": 0,
+"mb": 30,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+51,
+52
+]
+},
+{
+"tb": 7378240,
+"tbk": 115285,
+"tl": 37845,
+"mb": 64,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+42,
+43,
+44,
+45,
+53,
+5
+]
+},
+{
+"tb": 1562544,
+"tbk": 4689,
+"tl": 389,
+"mb": 1656,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+54,
+7
+]
+},
+{
+"tb": 393120,
+"tbk": 12,
+"tl": 6305797,
+"mb": 196608,
+"mbk": 1,
+"gb": 196608,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+35,
+55,
+41,
+7
+]
+},
+{
+"tb": 32,
+"tbk": 1,
+"tl": 287750,
+"mb": 32,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+56,
+57,
+13,
+33,
+20
+]
+},
+{
+"tb": 44920,
+"tbk": 926,
+"tl": 313909347,
+"mb": 44920,
+"mbk": 926,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+58,
+59,
+5
+]
+},
+{
+"tb": 2445888,
+"tbk": 25478,
+"tl": 1585,
+"mb": 128,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+42,
+43,
+44,
+45,
+60,
+5
+]
+},
+{
+"tb": 128,
+"tbk": 1,
+"tl": 1314,
+"mb": 128,
+"mbk": 1,
+"gb": 128,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+22,
+61,
+28
+]
+},
+{
+"tb": 540,
+"tbk": 4,
+"tl": 566476,
+"mb": 288,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+47,
+48,
+49,
+50,
+15,
+5
+]
+},
+{
+"tb": 33554368,
+"tbk": 19,
+"tl": 1230958,
+"mb": 16777216,
+"mbk": 1,
+"gb": 16777216,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+62,
+63,
+28
+]
+},
+{
+"tb": 393120,
+"tbk": 12,
+"tl": 6306254,
+"mb": 196608,
+"mbk": 1,
+"gb": 196608,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+35,
+64,
+41,
+7
+]
+},
+{
+"tb": 30,
+"tbk": 1,
+"tl": 5,
+"mb": 30,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+51,
+65
+]
+},
+{
+"tb": 536870784,
+"tbk": 22,
+"tl": 754187,
+"mb": 268435456,
+"mbk": 1,
+"gb": 268435456,
+"gbk": 1,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+22,
+66,
+28
+]
+},
+{
+"tb": 8192,
+"tbk": 1,
+"tl": 287791,
+"mb": 8192,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+67
+]
+},
+{
+"tb": 32,
+"tbk": 1,
+"tl": 566483,
+"mb": 32,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+56,
+57,
+13,
+14,
+15,
+5
+]
+},
+{
+"tb": 2816704,
+"tbk": 44011,
+"tl": 67562,
+"mb": 64,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+10,
+42,
+43,
+44,
+45,
+68,
+5
+]
+},
+{
+"tb": 44920,
+"tbk": 926,
+"tl": 25472678,
+"mb": 44920,
+"mbk": 926,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+69,
+9
+]
+},
+{
+"tb": 114464,
+"tbk": 9,
+"tl": 27241,
+"mb": 57344,
+"mbk": 1,
+"gb": 0,
+"gbk": 0,
+"eb": 0,
+"ebk": 0,
+"fs": [
+1,
+2,
+30,
+70,
+9
+]
+}
+],
+"ftbl": [
+"[root]",
+"0x55f97d833976: <dhat::Alloc as core::alloc::global::GlobalAlloc>::alloc (???:0:0)",
+"0x55f97d7cdb0b: alloc::raw_vec::finish_grow (???:0:0)",
+"0x55f97d7e6df5: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7d6d73: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7e40b1: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7df31c: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d7e42a5: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7d3de6: route_parser::parser::get_nodes_on_ways (???:0:0)",
+"0x55f97d7e413e: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7d0bda: alloc::raw_vec::finish_grow (???:0:0)",
+"0x55f97d7d0cb4: alloc::raw_vec::RawVecInner<A>::reserve::do_reserve_and_handle (???:0:0)",
+"0x55f97d87356c: quick_xml::reader::parser::Parser::read_start (???:0:0)",
+"0x55f97d7e18fd: quick_xml::reader::Reader<R>::read_event_impl (???:0:0)",
+"0x55f97d7e12a3: quick_xml::reader::Reader<R>::read_event_impl (???:0:0)",
+"0x55f97d7d67ee: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7df25a: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d7cd640: hashbrown::raw::RawTable<T,A>::reserve_rehash (???:0:0)",
+"0x55f97d7db6e9: hashbrown::map::HashMap<K,V,S,A>::insert (???:0:0)",
+"0x55f97d7d6063: route_parser::parser::parse_nodes (???:0:0)",
+"0x55f97d7e3edd: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7e4058: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7e6ae4: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7df133: route_parser::builder::GraphBuilder::add_edge_bidirectional (???:0:0)",
+"0x55f97d7df568: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d7d03ba: alloc::raw_vec::finish_grow (???:0:0)",
+"0x55f97d83a825: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7e5e19: route_parser::graph::Graph::special_dijkstra (???:0:0)",
+"0x55f97d7e44dc: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7d6f0b: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7e6c67: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7d3883: alloc::vec::Vec<T,A>::push (???:0:0)",
+"0x55f97d7d7120: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7d5d6a: route_parser::parser::parse_nodes (???:0:0)",
+"0x55f97d7df0cc: route_parser::builder::GraphBuilder::add_edge_bidirectional (???:0:0)",
+"0x55f97d7e6d2b: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7d4109: route_parser::parser::get_nodes_on_ways (???:0:0)",
+"0x55f97d7cd19c: hashbrown::raw::RawTable<T,A>::reserve_rehash (???:0:0)",
+"0x55f97d7db9bf: hashbrown::map::HashMap<K,V,S,A>::insert (???:0:0)",
+"0x55f97d7dec18: route_parser::builder::GraphBuilder::add_node (???:0:0)",
+"0x55f97d7df47e: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d7df45e: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d873f64: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d873882: quick_xml::events::attributes::IterState::check_for_duplicates (???:0:0)",
+"0x55f97d873c30: quick_xml::events::attributes::IterState::next (???:0:0)",
+"0x55f97d7d334e: <quick_xml::events::attributes::Attributes as core::iter::traits::iterator::Iterator>::next (???:0:0)",
+"0x55f97d7d5e65: route_parser::parser::parse_nodes (???:0:0)",
+"0x55f97d7cdbe4: alloc::raw_vec::RawVecInner<A>::reserve::do_reserve_and_handle (???:0:0)",
+"0x55f97d7e2a10: quick_xml::reader::buffered_reader::<impl quick_xml::reader::XmlSource<&mut alloc::vec::Vec<u8>> for R>::read_bytes_until (???:0:0)",
+"0x55f97d7e1497: quick_xml::reader::Reader<R>::read_event_impl (???:0:0)",
+"0x55f97d7e1281: quick_xml::reader::Reader<R>::read_event_impl (???:0:0)",
+"0x55f97d8c19a8: alloc::fmt::format::format_inner (???:0:0)",
+"0x55f97d7e4001: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7d6c14: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7df3c5: route_parser::builder::GraphBuilder::add_way (???:0:0)",
+"0x55f97d7dec30: route_parser::builder::GraphBuilder::add_node (???:0:0)",
+"0x55f97d873ea5: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d8734dc: quick_xml::reader::parser::Parser::read_start (???:0:0)",
+"0x55f97d7ea287: <alloc::vec::Vec<T,A> as core::clone::Clone>::clone (???:0:0)",
+"0x55f97d7d70ca: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7d68f3: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7e5f61: route_parser::graph::Graph::special_dijkstra (???:0:0)",
+"0x55f97d7e6ba4: alloc::raw_vec::RawVec<T,A>::grow_one (???:0:0)",
+"0x55f97d7e5c22: route_parser::graph::Graph::special_dijkstra (???:0:0)",
+"0x55f97d7dec6c: route_parser::builder::GraphBuilder::add_node (???:0:0)",
+"0x55f97d7e3e38: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7e5ae4: route_parser::graph::Graph::special_dijkstra (???:0:0)",
+"0x55f97d7e3e90: core::ops::function::FnOnce::call_once (???:0:0)",
+"0x55f97d7d6e5c: route_parser::parser::parse_ways_with_tags (???:0:0)",
+"0x55f97d7d3d6b: route_parser::parser::get_nodes_on_ways (???:0:0)",
+"0x55f97d7d4194: route_parser::parser::get_nodes_on_ways (???:0:0)"
+]
+}

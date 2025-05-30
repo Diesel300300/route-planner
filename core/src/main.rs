@@ -62,12 +62,32 @@ async fn ways_by_tags(req: Json<TagsRequest>) -> Result<Json<Vec<Way>>,Custom<St
 }
 
 
-#[post("/paths", format = "json", data = "<req>")]
+#[post("/paths_bfs", format = "json", data = "<req>")]
 async fn paths(graph: &State<Graph>, req: Json<PathsRequest>) -> Result<Json<Vec<Path>>,Custom<String>> {
     // defaul tol = 200 meters
     // don't want the user to decide the tolerance
-    let paths = graph.get_paths(req.start_lat, req.start_lon, req.goal_lat, req.goal_lon, req.amount as usize, req.target_distance, 200.0);
+    let paths = graph.get_paths_bfs(req.start_lat, req.start_lon, req.goal_lat, req.goal_lon, req.amount as usize, req.target_distance, 200.0);
     Ok(Json(paths))
+}
+
+#[post("/paths_special_dijkstra", format = "json", data = "<req>")]
+async fn paths_special_dijkstra(graph: &State<Graph>, req: Json<PathsRequest>) -> Result<Json<Vec<Path>>,Custom<String>> {
+    // defaul tol = 200 meters
+    // don't want the user to decide the tolerance
+    let paths = graph.get_paths_special_dijkstra(req.start_lat, req.start_lon, req.goal_lat, req.goal_lon, req.amount as usize, req.target_distance, 200.0);
+    Ok(Json(paths))
+}
+
+#[post("/paths_dfs", format = "json", data = "<req>")]
+async fn paths_dfs(graph: &State<Graph>, req: Json<PathsRequest>) -> Result<Json<Vec<Path>>,Custom<String>> {
+    // defaul tol = 200 meters
+    // don't want the user to decide the tolerance
+    let paths = graph.get_paths_dfs(req.start_lat, req.start_lon, req.goal_lat, req.goal_lon, req.amount as usize, req.target_distance, 200.0);
+    if let Some(paths) = paths {
+        Ok(Json(paths))
+    } else {
+        Err(Custom(Status::NotFound, "No paths found".to_string()))
+    }
 }
 
 
@@ -87,5 +107,5 @@ fn rocket() -> _ {
     rocket::build()
         .manage(graph)
         .attach(cors)
-        .mount("/", routes![ways_by_tags, paths])
+        .mount("/", routes![ways_by_tags, paths, paths_special_dijkstra, paths_dfs])
 }
